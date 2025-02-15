@@ -72,3 +72,6 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 License
 
 This project is licensed under the MIT License.
+## About me
+My name is Hazem, and I'am a Data Engineering student from Egypt. I'am currently looking for internships in Data Engineering and have skills in Python, MySQL, and Data Warehousing.
+I’ve worked with SQL Server, ETL processes, data modeling, and analytics, and I have building a modern data warehouse project to showcase your expertise.
