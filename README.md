@@ -13,27 +13,27 @@ The implementation follows industry best practices and leverages SQL Server's ca
 
 ## Technologies Used
 
-- ** SQL Server 2019/2022**
+- ** SQL Server 2019/2022
 
-- ** SQL Server Integration Services (SSIS) for ETL **
+- ** SQL Server Integration Services (SSIS) for ETL 
 
-- **SQL Server Analysis Services (SSAS) for OLAP**
+- ** SQL Server Analysis Services (SSAS) for OLAP
 
-**SQL Server Reporting Services (SSRS) for Visualization**
+- ** SQL Server Reporting Services (SSRS) for Visualization
 
-**Power BI for Business Intelligence**
+- ** Power BI for Business Intelligence
 
-**Python (Optional) for Data Processing**
+- ** Python (Optional) for Data Processing
 
 ## Project Requirements
 
--** SQL Server 2019/2022 installed with SSIS, SSAS, and SSRS.**
+- ** SQL Server 2019/2022 installed with SSIS, SSAS, and SSRS.**
 
--** AdventureWorks or a similar sample database for testing.**
+- ** AdventureWorks or a similar sample database for testing.**
 
--** SQL Server Management Studio (SSMS) for database administration.**
+- ** SQL Server Management Studio (SSMS) for database administration.**
 
--** Power BI Desktop for dashboard creation.**-
+- ** Power BI Desktop for dashboard creation.**-
 
 ## Features
 
