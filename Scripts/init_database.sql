@@ -13,12 +13,23 @@ Ensure no active connections to DataWarehouse before executing to avoid locking 
 use master;
 GO
 
--- Create database only if it doesn't exist  
-IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'DataWarehouse')  
-BEGIN  
-    CREATE DATABASE DataWarehouse;  
-END  
-GO  
+-- Drop the database if it exists
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'DataWarehouse')
+BEGIN
+    PRINT 'Dropping existing DataWarehouse database...';
+    
+    -- Terminate all connections before dropping the database
+    ALTER DATABASE DataWarehouse SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE DataWarehouse;
+    
+    PRINT 'Database DataWarehouse dropped successfully.';
+END
+ELSE
+BEGIN
+    PRINT 'Database DataWarehouse does not exist. No action taken.';
+END
+GO
+
 -- create the 'DataWarehouse' database
 CREATE DATABASE DataWarehouse;
 GO
