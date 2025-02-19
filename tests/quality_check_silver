@@ -1,0 +1,175 @@
+/*
+=============================
+Quality checks
+============================= 
+scirpt purpose:
+  this scirpt performs various quality checks fro data consistency & accuracy & standardization over the 'silver' layer it include :
+  - nul or duplicate primary keys.
+  - unwanted spaces in string fields.
+  - data stadnardization & consistency
+  - invalid data ranges and orders.
+
+notest: 
+  - run this checks after data loading to silver layer
+*/
+
+
+
+----------- crm_cust_info --------------
+-- Check for nulls or duplicates in primary key
+-- expectations: no result
+SELECT cst_id, count(*) 
+FROM silver.crm_cust_info
+group by cst_id
+having count(*) > 1;
+
+
+-- check for unwanted spaces
+-- Exepcation: No Results
+select cst_firstname
+from silver.crm_cust_info
+where cst_firstname != TRIM(cst_firstname)
+
+-- check for unwanted spaces
+-- Exepcation: No Results
+select cst_lastname
+from silver.crm_cust_info
+where cst_lastname != TRIM(cst_lastname)
+
+-- data standardization & Consistency 
+select Distinct cst_gndr
+from silver.crm_cust_info
+
+select Distinct cst_marital_status
+from silver.crm_cust_info
+
+select * from silver.crm_cust_info
+
+----------- crm_prd_info --------------
+
+-- Check for nulls or duplicates in primary key
+-- expectations: no result
+select prd_id, count(*)
+from silver.crm_prd_info
+group by prd_id
+having count(*) > 1 or prd_id is null
+
+
+-- check for unwanted spaces 
+-- Expectations: No Results
+
+select prd_nm
+from silver.crm_prd_info
+where prd_nm != TRIM(prd_nm)
+
+-- check for nuls or negative numbers
+-- Expectations: No Results
+select prd_cost
+from silver.crm_prd_info
+where prd_cost < 0 OR prd_cost IS NULL
+
+
+-- data standardization & Consistency 
+select distinct prd_line
+from silver.crm_prd_info
+
+-- check for invalid date orders
+select *
+from silver.crm_prd_info
+where prd_end_dt < prd_start_dt
+
+select * from silver.crm_prd_info
+
+
+select 
+	prd_id,
+	prd_key,
+	prd_nm,
+	prd_start_dt,
+	prd_end_dt,
+	lead(prd_start_dt) over(partition by prd_key order by prd_start_dt)-1 as prd_end_dt_test
+from silver.crm_prd_info
+where prd_key IN ('AC-HE-HL-U509-R', 'AC-HE-HL-U509')
+
+----------- crm_sales_details --------------
+-- check for inavlid dates
+SELECT 
+    sls_due_dt
+FROM silver.crm_sales_details
+WHERE 
+    TRY_CONVERT(INT, FORMAT(sls_due_dt, 'yyyyMMdd')) IS NULL
+    OR TRY_CONVERT(INT, FORMAT(sls_due_dt, 'yyyyMMdd')) > 20500101
+    OR TRY_CONVERT(INT, FORMAT(sls_due_dt, 'yyyyMMdd')) < 19000101;
+
+-- cehck for invalid date orders
+
+select * 
+from silver.crm_sales_details
+where sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt
+
+
+-- check data consistency: between sales, quantity, and price
+-- >> Sales = Quantity * Price
+-- >> value must not be NUll, Zero, or Negative
+
+select distinct
+	sls_sales,
+	sls_quantity,
+	sls_price
+from silver.crm_sales_details
+where sls_sales != sls_quantity * sls_price
+OR sls_sales IS NULL OR sls_quantity IS NULL OR sls_price IS NULL
+OR sls_sales <= 0 OR sls_quantity <= 0 OR sls_price <= 0
+order by sls_sales, sls_quantity, sls_price
+
+
+-- final check 
+select * from silver.crm_sales_details
+
+------------------------ erp_cust_az12 -------------------------
+
+-- Identify Out-of_Range Dates
+select distinct bdate
+from silver.erp_cust_az12 
+where bdate < '1924-01-01' OR bdate > GETDATE()
+
+-- Data Standardization & Consistency
+select distinct gen
+from silver.erp_cust_az12
+
+-- final check 
+select * from silver.erp_cust_az12
+
+
+--------------------------- erp_loc_a101 ---------------------
+-- Data Standardization & Consistency
+select distinct cntry
+from silver.erp_loc_a101
+order by cntry
+
+-- final check
+select * from silver.erp_loc_a101
+
+
+------------------------- erp_px_cat_g1v2 --------------------
+
+-- check for unwanted spaces 
+select * from silver.erp_px_cat_g1v2
+where cat != TRIM(cat) OR subcat != Trim(subcat) OR maintenance != TRIM(maintenance)
+
+
+-- Data Standardization & Consistency
+select distinct cat
+from silver.erp_px_cat_g1v2
+
+
+select distinct subcat
+from silver.erp_px_cat_g1v2
+
+
+select distinct maintenance
+from silver.erp_px_cat_g1v2
+
+
+-- final check 
+select * from silver.erp_px_cat_g1v2
