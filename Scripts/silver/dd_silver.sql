@@ -1,3 +1,13 @@
+/*
+*****************************************************************************
+DDL Script: Create Silver Tables
+******************************************************************************
+Script Purpose:
+    This script creata table in the 'bronze' schema, droping existing tables
+    if they already exist
+  Run this scirpt to re_defined the DLL structure of 'bronze' Tables
+*******************************************************************************
+*/
 IF OBJECT_ID ('silver.crm_cust_info', 'U') IS NOT NULL
 	DROP TABLE silver.crm_cust_info;
 CREATE TABLE silver.crm_cust_info (
