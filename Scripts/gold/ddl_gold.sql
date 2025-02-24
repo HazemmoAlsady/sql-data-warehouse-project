@@ -1,4 +1,15 @@
+/***************************************************************************
+DDL Script: Create Gold Layer Views
+***************************************************************************
+Script Purpose:
+    This script creates views in the 'gold' schema for dimensional modeling.
+    Run this script to define the structure of the Gold Layer Views.
+***************************************************************************/
 
+-- Drop views if they already exist
+DROP VIEW IF EXISTS gold.dim_customers;
+DROP VIEW IF EXISTS gold.dim_products;
+DROP VIEW IF EXISTS gold.face_sales;
 ----------------------------------------------------------------------
 -- create dimesnsion : gold.dim_customers
 ----------------------------------------------------------------------
